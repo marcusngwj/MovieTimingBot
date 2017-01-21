@@ -15,6 +15,17 @@ Movie Timings
 /cancel - cancel the current operation """
 
 cinema_message = "Which cinema do you want to watch at?"
+movie_message = "Which movie do you want to watch?"
+date_message = "Which date do you want to watch the movie?"
+time_message = "When do you want to watch the movie?"
+ratings_message = "Which movie do you want to check the ratings?"
+
+def button(bot, update):
+    query = update.callback_query
+
+    bot.editMessageText(text="Selected option: %s" % query.data,
+                        chat_id=query.message.chat_id,
+                        message_id=query.message.message_id)
 
 def start(bot, update):
     update.message.reply_text(start_message)
@@ -34,39 +45,36 @@ def cinema(bot, update):
 
     update.message.reply_text(cinema_message, reply_markup=reply_markup)
 
-def button(bot, update):
-    query = update.callback_query
-
-    bot.editMessageText(text="Selected option: %s" % query.data,
-                        chat_id=query.message.chat_id,
-                        message_id=query.message.message_id)
-
 def movie(bot, update):
-    update.message.reply_text(
-        'Hello {}'.format(update.message.from_user.first_name))
+    update.message.reply_text(movie_message)
 
 def date(bot, update):
-    update.message.reply_text(
-        'Hello {}'.format(update.message.from_user.first_name))
+    update.message.reply_text(date_message)
 
 def time(bot, update):
-    update.message.reply_text(
-        'Hello {}'.format(update.message.from_user.first_name))
+    keyboard = [[InlineKeyboardButton("Morning", callback_data='Morning')],
+                [InlineKeyboardButton("Afternoon", callback_data='Afternoon')],
+                [InlineKeyboardButton("Night", callback_data='Night')],
+                [InlineKeyboardButton("Midnight", callback_data='Midnight')],
+                [InlineKeyboardButton("Any", callback_data='Any')]]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    update.message.reply_text(time_message, reply_markup=reply_markup)
 
 def ratings(bot, update):
-    update.message.reply_text(
-        'Hello {}'.format(update.message.from_user.first_name))
+    update.message.reply_text(ratings_message)
 
 def cancel(bot, update):
     update.message.reply_text(
-        'Hello {}'.format(update.message.from_user.first_name))
+        'Bye {}'.format(update.message.from_user.first_name))
 
 updater = Updater('321039232:AAH36i7fC0h3W2k9or7-IXDiR9Lp3BmhQZg')
 
+updater.dispatcher.add_handler(CallbackQueryHandler(button))
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(CommandHandler('hello', hello))
 updater.dispatcher.add_handler(CommandHandler('cinema', cinema))
-updater.dispatcher.add_handler(CallbackQueryHandler(button))
 updater.dispatcher.add_handler(CommandHandler('movie', movie))
 updater.dispatcher.add_handler(CommandHandler('date', date))
 updater.dispatcher.add_handler(CommandHandler('time', time))
